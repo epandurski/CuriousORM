@@ -9,11 +9,15 @@ directly, or using some specialized software), and all the
 transactions are implemented either as methods in sub-classes of
 "Database", or as stored procedures. 
 
-This ORM allows you to very easily: (1) implement complex database
-transactions, (2) call stored procedures, (3) do simple
-queries. For complex queries you should use database views and
-stored procedures that return tables. (This is exactly what they
-were invented for!)
+This ORM allows you to very easily:
+
+1. Implement complex database transactions
+2. Call stored procedures
+3. Do simple queries
+
+For complex queries you should use database views and stored
+procedures that return tables. (This is exactly what they were
+invented for!)
 
 Here is a quick example:
 
