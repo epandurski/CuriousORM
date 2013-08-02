@@ -407,9 +407,8 @@ class Connection(AbstractMapper):
         return f
 
     def close(self):
-        self.__connection_lock.acquire()
-        self.__connection.close()
-        self.__connection_lock.release()
+        with self.__connection_lock:
+            self.__connection.close()
 
     @contextmanager
     def Transaction(self):
@@ -437,16 +436,15 @@ class Database(Connection):
     __is_frozen = False
 
     def __new__(cls, dsn, dictrows=False):
-        Database.__instances_lock.acquire()
-        attr_name = '_%s__instances' % cls.__name__
-        if not hasattr(cls, attr_name):
-            setattr(cls, attr_name, {})
-        instances = getattr(cls, attr_name)
-        if (dsn, dictrows) not in instances:
-            instance = instances[(dsn, dictrows)] = object.__new__(cls)
-            Connection.__init__(instance, dsn, dictrows)
-            instance._Database__is_frozen = True
-        Database.__instances_lock.release()
+        with Database.__instances_lock:
+            attr_name = '_%s__instances' % cls.__name__
+            if not hasattr(cls, attr_name):
+                setattr(cls, attr_name, {})
+            instances = getattr(cls, attr_name)
+            if (dsn, dictrows) not in instances:
+                instance = instances[(dsn, dictrows)] = object.__new__(cls)
+                Connection.__init__(instance, dsn, dictrows)
+                instance._Database__is_frozen = True
         return instances[(dsn, dictrows)]
 
     def __init__(self, dsn, dictrows=False):
