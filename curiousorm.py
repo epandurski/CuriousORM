@@ -35,8 +35,12 @@ import time, threading, collections
 try:
     import psycopg2
 except ImportError:
-    from psycopg2cffi import compat
-    compat.register()
+    try:
+        from psycopg2cffi import compat
+    except ImportError:
+        pass
+    else:
+        compat.register()
     import psycopg2
 
 import psycopg2.extensions
