@@ -68,3 +68,5 @@ This ORM consists of less than 20KB of very clean, thread-safe
 code, so that it can be reviewed and understood with minimum
 effort. In fact, reading and understanding the code is the
 recommended way of mastering it.
+
+Run "python setup.py install" to install.
