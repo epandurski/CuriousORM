@@ -29,7 +29,7 @@
 ##
 from contextlib import contextmanager
 from functools import wraps
-import time, itertools, threading, collections
+import time, threading, collections
 
 # Try to import psycopg2. If not possible, try psycopg2cffi.
 try:
