@@ -36,5 +36,6 @@ setup(name='CuriousORM',
         'Topic :: Software Development',
         'Topic :: Software Development :: Libraries :: Python Modules',
         ],
+      platforms=['any'],
       py_modules=['curiousorm'],
       )
