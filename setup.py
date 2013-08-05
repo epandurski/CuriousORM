@@ -37,5 +37,6 @@ setup(name='CuriousORM',
         'Topic :: Software Development :: Libraries :: Python Modules',
         ],
       platforms=['any'],
+      license='Public Domain',
       py_modules=['curiousorm'],
       )
