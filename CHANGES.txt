@@ -1,3 +1,7 @@
+August 6th, 2013
+v1.0.3 -- Added "CHANGES.txt" file.
+       -- Renamed "LICENSE" file to "LICENSE.txt".
+
 August 5th, 2013
 v1.0.1 -- Fixes minor distutils packaging issues.
 
