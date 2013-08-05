@@ -1,0 +1,5 @@
+August 5th, 2013
+v1.0.1 -- Fixes minor distutils packaging issues.
+
+August 4th, 2013
+v1.0.0 -- This is the first stable release.
