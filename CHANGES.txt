@@ -1,4 +1,7 @@
 August 7th, 2013
+v1.1.1 -- Fixed annoying typo.
+
+August 7th, 2013
 v1.1.0 -- Cursor instances have got new "close()" method.
 
        -- Connection, Database, and Cursor instances can be used in
