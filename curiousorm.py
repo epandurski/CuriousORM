@@ -384,6 +384,12 @@ class Connection(AbstractMapper):
         self.__dictrows = dictrows
         self.__inside_transaction = False
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc_info):
+        self.close()
+
     def _acquire_connection(self):
         self.__connection_lock.acquire()
         return self.__connection
@@ -454,6 +460,9 @@ class Database(Connection):
     def __init__(self, dsn, dictrows=False):
         pass
 
+    def __exit__(self, *exc_info):
+        pass
+
     def __setattr__(self, key, value):
         if self.__is_frozen and key not in self.__dict__:
             raise TypeError('%r is a frozen instance' % self)
@@ -489,7 +498,11 @@ class Cursor:
             self.__fetch()
             return next(self.__buffer)
 
-    next = __next__
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc_info):
+        self.close()
 
     def __fetch(self):
         if self.__cursor is None:
@@ -500,6 +513,8 @@ class Cursor:
             self.__cursor.arraysize = self.__buffer_size
             self.__cursor.execute(self.__query, self.__query_params)
         self.__buffer = iter(self.__cursor.fetchmany(self.__buffer_size))
+
+    next = __next__
 
     def close(self):
         assert self.__owning_thread is threading.current_thread(), \
