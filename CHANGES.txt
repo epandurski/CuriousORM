@@ -1,5 +1,5 @@
 August 7th, 2013
-v1.0.3 -- Cursor instances have got new "close()" method.
+v1.1.0 -- Cursor instances have got new "close()" method.
 
        -- Connection, Database, and Cursor instances can be used in
           "with"-statements.
