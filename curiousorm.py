@@ -452,9 +452,10 @@ class Database(Connection):
                 setattr(cls, attr_name, {})
             instances = getattr(cls, attr_name)
             if (dsn, dictrows) not in instances:
-                instance = instances[(dsn, dictrows)] = object.__new__(cls)
+                instance = object.__new__(cls)
                 Connection.__init__(instance, dsn, dictrows)
                 instance._Database__is_frozen = True
+                instances[(dsn, dictrows)] = instance
         return instances[(dsn, dictrows)]
 
     def __init__(self, dsn, dictrows=False):
