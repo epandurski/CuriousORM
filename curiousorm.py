@@ -54,10 +54,15 @@ psycopg2.extensions.register_type(psycopg2.extensions.UNICODEARRAY)
 
 def _connect(dsn, autocommit=False):
     o = psycopg2.connect(dsn)
-    o.set_client_encoding('UTF8')
-    if autocommit:
-        o.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
-    return o
+    try:
+        o.set_client_encoding('UTF8')
+        if autocommit:
+            o.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+    except:
+        o.close()
+        raise
+    else:
+        return o
 
 
 def _compose_select(kwargs, table):
