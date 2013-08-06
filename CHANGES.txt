@@ -8,7 +8,7 @@ v1.1.0 -- Cursor instances have got new "close()" method.
           instances between threads.
 
 August 6th, 2013
-v1.0.3 -- Added "CHANGES.txt" file.
+v1.0.2 -- Added "CHANGES.txt" file.
        -- Renamed "LICENSE" file to "LICENSE.txt".
 
 August 5th, 2013
