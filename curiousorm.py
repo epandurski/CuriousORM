@@ -463,27 +463,51 @@ class Database(Connection):
         raise TypeError("'Database' instances can not be closed")
 
 
-def Cursor(dsn, query, query_params=[], buffer_size=10000, dictrows=False):
-    """Creates server-side cursor and returns iterator over it."""
+class Cursor:
+    """A server-side cursor iterator."""
 
-    o = _connect(dsn)
-    try:
-        c = o.cursor(
-            'curiousorm_cursor', 
-            cursor_factory=DictCursor if dictrows else NamedTupleCursor
-            )
-        c.arraysize = buffer_size
-        c.execute(query, query_params)
-        while True:
-            rows = c.fetchmany(buffer_size)
-            if rows:
-                for row in rows:
-                    yield row
-            else:
-                break
-        c.close()
-    finally:
-        o.close()
+    def __init__(self, dsn, query, query_params=[], buffer_size=10000, 
+                 dictrows=False):
+        self.__connection = _connect(dsn)
+        self.__cursor = None
+        self.__buffer = iter([])
+        self.__owning_thread = threading.current_thread()
+        self.__query = query
+        self.__query_params = query_params
+        self.__buffer_size = buffer_size
+        self.__dictrows = dictrows
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        assert self.__owning_thread is threading.current_thread(), \
+            "'Cursor' instances can not be shared between threads"
+        try:
+            return next(self.__buffer)
+        except StopIteration:
+            self.__fetch()
+            return next(self.__buffer)
+
+    next = __next__
+
+    def __fetch(self):
+        if self.__cursor is None:
+            self.__cursor = self.__connection.cursor(
+                'curiousorm_cursor', 
+                cursor_factory=(
+                    DictCursor if self.__dictrows else NamedTupleCursor))
+            self.__cursor.arraysize = self.__buffer_size
+            self.__cursor.execute(self.__query, self.__query_params)
+        self.__buffer = iter(self.__cursor.fetchmany(self.__buffer_size))
+
+    def close(self):
+        assert self.__owning_thread is threading.current_thread(), \
+            "'Cursor' instances can not be shared between threads"
+        self.__buffer = None
+        if self.__cursor:
+            self.__cursor.close()
+        self.__connection.close()
 
 
 def retry_on_deadlock(action):
