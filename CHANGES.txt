@@ -1,4 +1,7 @@
 August 7th, 2013
+v1.1.2 -- More careful exception handling in various places.
+
+August 7th, 2013
 v1.1.1 -- Fixed annoying typo.
 
 August 7th, 2013
