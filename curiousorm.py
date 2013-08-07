@@ -527,7 +527,10 @@ class Cursor:
             "'Cursor' instances can not be shared between threads"
         self.__buffer = None
         if self.__cursor:
-            self.__cursor.close()
+            try:
+                self.__cursor.close()
+            except:
+                pass
         self.__connection.close()
 
 
