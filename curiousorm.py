@@ -466,9 +466,6 @@ class Database(Connection):
     def __init__(self, dsn, dictrows=False):
         pass
 
-    def __exit__(self, *exc_info):
-        pass
-
     def __setattr__(self, key, value):
         if self.__is_frozen and key not in self.__dict__:
             raise TypeError('%r is a frozen instance' % self)
