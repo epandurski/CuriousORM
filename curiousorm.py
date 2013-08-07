@@ -475,7 +475,7 @@ class Database(Connection):
         object.__setattr__(self, key, value)
 
     def close(self):
-        raise TypeError("'Database' instances can not be closed")
+        pass
 
 
 class Cursor:
