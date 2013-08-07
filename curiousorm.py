@@ -526,11 +526,10 @@ class Cursor:
         assert self.__owning_thread is threading.current_thread(), \
             "'Cursor' instances can not be shared between threads"
         self.__buffer = None
-        if self.__cursor:
-            try:
-                self.__cursor.close()
-            except:
-                pass
+        try:
+            self.__cursor.close()
+        except:
+            pass
         self.__connection.close()
 
 
