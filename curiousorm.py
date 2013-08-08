@@ -485,6 +485,7 @@ class Cursor:
         self._query_params = query_params
         self._buffer_size = buffer_size
         self._dictrows = dictrows
+        self._closed = False
         self._connection = _connect(dsn)
         self._cursor = None
         self._buffer = iter([])
@@ -500,8 +501,11 @@ class Cursor:
         try:
             return next(self._buffer)
         except StopIteration:
-            self._fetch()
-            return next(self._buffer)
+            if self._closed:
+                raise
+            else:
+                self._fetch()
+                return next(self._buffer)
 
     def __enter__(self):
         return self
@@ -509,27 +513,37 @@ class Cursor:
     def __exit__(self, *exc_info):
         self.close()
 
+    def _create_named_cursor(self):
+        c = self._connection.cursor(
+            'curiousorm_cursor', 
+            cursor_factory=DictCursor if self._dictrows else NamedTupleCursor
+            )
+        c.arraysize = self._buffer_size
+        c.execute(self._query, self._query_params)
+        return c
+
     def _fetch(self):
         if self._cursor is None:
-            self._cursor = self._connection.cursor(
-                'curiousorm_cursor', 
-                cursor_factory=(
-                    DictCursor if self._dictrows else NamedTupleCursor))
-            self._cursor.arraysize = self._buffer_size
-            self._cursor.execute(self._query, self._query_params)
-        self._buffer = iter(self._cursor.fetchmany(self._buffer_size))
+            self._cursor = self._create_named_cursor()
+        rows = self._cursor.fetchmany(self._buffer_size)
+        if rows:
+            self._buffer = iter(rows)
+        else:
+            self.close()
 
     next = __next__
 
     def close(self):
         assert self._owning_thread is threading.current_thread(), \
             "'Cursor' instances can not be shared between threads"
-        self._buffer = None
-        try:
-            self._cursor.close()
-        except:
-            pass
-        self._connection.close()
+        if not self._closed:
+            self._buffer = iter([])
+            try:
+                self._cursor.close()
+            except:
+                pass
+            self._connection.close()
+            self._closed = True
 
 
 def retry_on_deadlock(action):
