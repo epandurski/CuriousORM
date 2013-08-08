@@ -14,7 +14,7 @@ that return tables.
 """
 
 setup(name='CuriousORM',
-      version='1.1.2',
+      version='1.1.3',
       description='Simple object-relational mapper for Python and PostgreSQL',
       maintainer="Evgeni Pandurski",
       maintainer_email="epandurski@gmail.com",
