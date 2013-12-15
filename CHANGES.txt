@@ -1,3 +1,6 @@
+December 15th, 2013
+v1.2.0 -- Allow stored procedures to be called with "callproc_" prefix.
+
 August 8th, 2013
 v1.1.3 -- Fixed bug that caused "Cursor" not to be closed after the
           cursor iterator has been consumed.

@@ -59,7 +59,9 @@ Here is a quick example:
     Traceback (most recent call last):
     ...
     Exception: nonzero account balance
-    >>> db.current_database()  # calls a stored procedure
+    >>> db.callproc_current_database()  # calls a stored procedure
+    u'curiousorm_test'
+    >>> db.current_database()  # calls the same stored procedure
     u'curiousorm_test'
     >>> db.current_database_list()  # the same, but returns a list instead
     [Record(current_database=u'curiousorm_test')]
